@@ -13,11 +13,15 @@ function App() {
       while (true) {
         const response = await fetch(`https://swapi.dev/api/films/${page}`);
         const data = await response.json();
+        
+
 
         if (data.title) {
           setMovies((prevMovies) => [...prevMovies, data.title]); // Update movies array incrementally
           page++;
+          
         } else {
+          console.log("No more films available");
           break; // Break the loop if there are no more films available
         }
       }
