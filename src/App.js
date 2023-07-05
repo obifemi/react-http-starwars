@@ -6,27 +6,27 @@ function App() {
   const [currentStatus, setStatus] = useState("Click the button to fetch movies");
   const [movies, setMovies] = useState([]);
 
-  const fetchMovies = async () => {
+  const fetchHandler = async () => {
     setStatus("Loading...");
     try {
-      const response = await fetch("https://swapi.dev/api/films");
-      const data = await response.json();
+      let page = 1;
+      while (true) {
+        const response = await fetch(`https://swapi.dev/api/films/${page}`);
+        const data = await response.json();
 
-      data.results.forEach((film, index) => {
-        setTimeout(() => {
-          setMovies((prevMovies) => [...prevMovies, film]); // Update movies array incrementally
-        }, index * 1000); // Delay each film by 1 second (adjust as needed)
-      });
+        if (data.title) {
+          setMovies((prevMovies) => [...prevMovies, data.title]); // Update movies array incrementally
+          page++;
+        } else {
+          break; // Break the loop if there are no more films available
+        }
+      }
 
       setStatus(""); // Clear the status message
     } catch (error) {
       console.error("Error fetching movies:", error);
       setStatus("Failed to fetch movies");
     }
-  };
-
-  const fetchHandler = () => {
-    fetchMovies();
   };
 
   return (
